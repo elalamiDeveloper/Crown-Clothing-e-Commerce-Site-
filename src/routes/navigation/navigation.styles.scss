@@ -1,0 +1,35 @@
+.navigation {
+  padding: 1.5rem 5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 2px 2px -2px rgba(0, 0, 0, 0.2);
+
+  .logo-container {
+    width: 7.5em;
+  }
+
+  .links-container {
+    flex: 1;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 2.5rem;
+
+    .nav-link-container {
+      a {
+        &:link,
+        &:active {
+          font-size: 1.8rem;
+          text-transform: uppercase;
+        }
+
+        &:hover,
+        &:active {
+          color: rgb(54, 107, 255);
+          transform: scale(1.05);
+        }
+      }
+    }
+  }
+}
