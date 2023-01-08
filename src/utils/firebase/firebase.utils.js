@@ -1,13 +1,12 @@
 import { initializeApp } from 'firebase/app';
-
+import { getFirestore, doc, getDoc, setDoc } from 'firebase/firestore';
 import {
   getAuth,
   GoogleAuthProvider,
   signInWithPopup,
   createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
 } from 'firebase/auth';
-
-import { getFirestore, doc, getDoc, setDoc } from 'firebase/firestore';
 
 const firebaseConfig = {
   apiKey: 'AIzaSyCNVVotgqo-DpYBjQS5qV6Cna5XyKwhv8M',
@@ -17,19 +16,31 @@ const firebaseConfig = {
   messagingSenderId: '1062391396718',
   appId: '1:1062391396718:web:4296e2ef168029dd1a297f',
 };
-
-const firebaseApp = initializeApp(firebaseConfig);
+initializeApp(firebaseConfig);
 
 const db = getFirestore();
-
 const auth = getAuth();
-const googleProvider = new GoogleAuthProvider();
 
+const googleProvider = new GoogleAuthProvider();
 googleProvider.setCustomParameters({
   prompt: 'select_account',
 });
 
 const signInWithGooglePopup = () => signInWithPopup(auth, googleProvider);
+
+const signInAuthUserWithEmailAndPassword = async (email, password) => {
+  if (!email || !password) return;
+
+  try {
+    const signUp = await signInWithEmailAndPassword(auth, email, password);
+    console.log('Success Connection');
+    return signUp;
+  } catch (err) {
+    if (err.code === 'auth/wrong-password') alert('Wrong Password !!!');
+    if (err.code === 'auth/user-not-found')
+      alert('User not found, Can you change email !!!');
+  }
+};
 
 const createUserDocumentFromAuth = async (
   userAuth,
@@ -68,4 +79,5 @@ export {
   signInWithGooglePopup,
   createUserDocumentFromAuth,
   createAuthUserWithEmailAndPassword,
+  signInAuthUserWithEmailAndPassword,
 };

@@ -10,14 +10,16 @@ const Navigation = () => {
         <Link className="logo-container" to="/">
           <img src={logo} alt="crown logo" className="logo" />
         </Link>
+
         <ul className="links-container">
           <li className="nav-link-container">
             <Link className="nav-link" to="/shop">
               SHOP
             </Link>
           </li>
+
           <li className="nav-link-container">
-            <Link className="nav-link" to="/sign-in">
+            <Link className="nav-link" to="/auth">
               Sign IN
             </Link>
           </li>
