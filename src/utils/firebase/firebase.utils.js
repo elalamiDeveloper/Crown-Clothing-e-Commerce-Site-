@@ -6,6 +6,8 @@ import {
   signInWithPopup,
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
+  signOut,
+  onAuthStateChanged,
 } from 'firebase/auth';
 
 const firebaseConfig = {
@@ -75,9 +77,19 @@ const createAuthUserWithEmailAndPassword = async (email, password) => {
   return await createUserWithEmailAndPassword(auth, email, password);
 };
 
+const signOutUser = async () => await signOut(auth);
+
+const onAuthStateChangedListener = (
+  callback,
+  errorCallback,
+  completedCallback
+) => onAuthStateChanged(auth, callback);
+
 export {
   signInWithGooglePopup,
   createUserDocumentFromAuth,
   createAuthUserWithEmailAndPassword,
   signInAuthUserWithEmailAndPassword,
+  signOutUser,
+  onAuthStateChangedListener,
 };

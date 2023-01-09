@@ -17,12 +17,10 @@
     gap: 2.5rem;
 
     .nav-link-container {
-      a {
-        &:link,
-        &:active {
-          font-size: 1.8rem;
-          text-transform: uppercase;
-        }
+      .nav-link {
+        font-size: 1.8rem;
+        text-transform: uppercase;
+        cursor: pointer;
 
         &:hover,
         &:active {

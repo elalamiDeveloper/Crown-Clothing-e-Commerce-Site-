@@ -7,7 +7,6 @@ import {
 } from '../../utils/firebase/firebase.utils';
 
 import './sign-in-form.styles.scss';
-
 import FormInput from '../form-input/form-input.component';
 import Button from '../button/button.component';
 
@@ -32,21 +31,22 @@ const SignInForm = () => {
     e.preventDefault();
 
     try {
-      const resp = await signInAuthUserWithEmailAndPassword(email, password);
-      console.log(resp);
+      const { user } = await signInAuthUserWithEmailAndPassword(
+        email,
+        password
+      );
+
+      setInputFields({
+        email: '',
+        password: '',
+      });
     } catch (err) {
       console.log(err);
     }
-
-    setInputFields({
-      email: '',
-      password: '',
-    });
   };
 
   const signInWithGoogle = async () => {
-    const { user } = await signInWithGooglePopup();
-    await createUserDocumentFromAuth(user);
+    await signInWithGooglePopup();
   };
 
   return (
