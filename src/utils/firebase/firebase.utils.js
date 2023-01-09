@@ -4,8 +4,8 @@ import {
   getAuth,
   GoogleAuthProvider,
   signInWithPopup,
-  createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
+  createUserWithEmailAndPassword,
   signOut,
   onAuthStateChanged,
 } from 'firebase/auth';
@@ -44,6 +44,11 @@ const signInAuthUserWithEmailAndPassword = async (email, password) => {
   }
 };
 
+const createAuthUserWithEmailAndPassword = async (email, password) => {
+  if (!email || !password) return;
+  return await createUserWithEmailAndPassword(auth, email, password);
+};
+
 const createUserDocumentFromAuth = async (
   userAuth,
   additionalInformation = {}
@@ -72,11 +77,6 @@ const createUserDocumentFromAuth = async (
   return userDocRef;
 };
 
-const createAuthUserWithEmailAndPassword = async (email, password) => {
-  if (!email || !password) return;
-  return await createUserWithEmailAndPassword(auth, email, password);
-};
-
 const signOutUser = async () => await signOut(auth);
 
 const onAuthStateChangedListener = (
@@ -87,9 +87,9 @@ const onAuthStateChangedListener = (
 
 export {
   signInWithGooglePopup,
-  createUserDocumentFromAuth,
-  createAuthUserWithEmailAndPassword,
   signInAuthUserWithEmailAndPassword,
+  createAuthUserWithEmailAndPassword,
+  createUserDocumentFromAuth,
   signOutUser,
   onAuthStateChangedListener,
 };
