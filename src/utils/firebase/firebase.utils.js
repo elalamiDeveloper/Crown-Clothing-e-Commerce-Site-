@@ -77,13 +77,13 @@ const createUserDocumentFromAuth = async (
   return userDocRef;
 };
 
-const signOutUser = async () => await signOut(auth);
-
 const onAuthStateChangedListener = (
   callback,
   errorCallback,
   completedCallback
 ) => onAuthStateChanged(auth, callback);
+
+const signOutUser = async () => await signOut(auth);
 
 export {
   signInWithGooglePopup,

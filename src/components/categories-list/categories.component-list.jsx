@@ -1,6 +1,5 @@
-import CategoryItem from '../category-item/category-item.component';
-
 import './categories-list.styles.scss';
+import CategoryItem from '../category-item/category-item.component';
 
 const CategoriesList = ({ categories }) => {
   const categoriesListHTML = categories.map((category) => (
