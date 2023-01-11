@@ -1,61 +1,49 @@
 import { initializeApp } from 'firebase/app';
-import { getFirestore, doc, getDoc, setDoc } from 'firebase/firestore';
 import {
   getAuth,
-  GoogleAuthProvider,
+  signInWithRedirect,
   signInWithPopup,
-  signInWithEmailAndPassword,
+  GoogleAuthProvider,
   createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
   signOut,
   onAuthStateChanged,
 } from 'firebase/auth';
+import { getFirestore, doc, getDoc, setDoc } from 'firebase/firestore';
 
 const firebaseConfig = {
-  apiKey: 'AIzaSyCNVVotgqo-DpYBjQS5qV6Cna5XyKwhv8M',
-  authDomain: 'crwn-clothing-db-970a4.firebaseapp.com',
-  projectId: 'crwn-clothing-db-970a4',
-  storageBucket: 'crwn-clothing-db-970a4.appspot.com',
-  messagingSenderId: '1062391396718',
-  appId: '1:1062391396718:web:4296e2ef168029dd1a297f',
+  apiKey: 'AIzaSyDDU4V-_QV3M8GyhC9SVieRTDM4dbiT0Yk',
+  authDomain: 'crwn-clothing-db-98d4d.firebaseapp.com',
+  projectId: 'crwn-clothing-db-98d4d',
+  storageBucket: 'crwn-clothing-db-98d4d.appspot.com',
+  messagingSenderId: '626766232035',
+  appId: '1:626766232035:web:506621582dab103a4d08d6',
 };
-initializeApp(firebaseConfig);
 
-const db = getFirestore();
-const auth = getAuth();
+const firebaseApp = initializeApp(firebaseConfig);
 
 const googleProvider = new GoogleAuthProvider();
+
 googleProvider.setCustomParameters({
   prompt: 'select_account',
 });
 
-const signInWithGooglePopup = () => signInWithPopup(auth, googleProvider);
+export const auth = getAuth();
+export const signInWithGooglePopup = () =>
+  signInWithPopup(auth, googleProvider);
+export const signInWithGoogleRedirect = () =>
+  signInWithRedirect(auth, googleProvider);
 
-const signInAuthUserWithEmailAndPassword = async (email, password) => {
-  if (!email || !password) return;
+export const db = getFirestore();
 
-  try {
-    const signUp = await signInWithEmailAndPassword(auth, email, password);
-    console.log('Success Connection');
-    return signUp;
-  } catch (err) {
-    if (err.code === 'auth/wrong-password') alert('Wrong Password !!!');
-    if (err.code === 'auth/user-not-found')
-      alert('User not found, Can you change email !!!');
-  }
-};
-
-const createAuthUserWithEmailAndPassword = async (email, password) => {
-  if (!email || !password) return;
-  return await createUserWithEmailAndPassword(auth, email, password);
-};
-
-const createUserDocumentFromAuth = async (
+export const createUserDocumentFromAuth = async (
   userAuth,
   additionalInformation = {}
 ) => {
   if (!userAuth) return;
 
   const userDocRef = doc(db, 'users', userAuth.uid);
+
   const userSnapshot = await getDoc(userDocRef);
 
   if (!userSnapshot.exists()) {
@@ -69,27 +57,27 @@ const createUserDocumentFromAuth = async (
         createdAt,
         ...additionalInformation,
       });
-    } catch (err) {
-      console.log('error creating the user', err);
+    } catch (error) {
+      console.log('error creating the user', error.message);
     }
   }
 
   return userDocRef;
 };
 
-const onAuthStateChangedListener = (
-  callback,
-  errorCallback,
-  completedCallback
-) => onAuthStateChanged(auth, callback);
+export const createAuthUserWithEmailAndPassword = async (email, password) => {
+  if (!email || !password) return;
 
-const signOutUser = async () => await signOut(auth);
-
-export {
-  signInWithGooglePopup,
-  signInAuthUserWithEmailAndPassword,
-  createAuthUserWithEmailAndPassword,
-  createUserDocumentFromAuth,
-  signOutUser,
-  onAuthStateChangedListener,
+  return await createUserWithEmailAndPassword(auth, email, password);
 };
+
+export const signInAuthUserWithEmailAndPassword = async (email, password) => {
+  if (!email || !password) return;
+
+  return await signInWithEmailAndPassword(auth, email, password);
+};
+
+export const signOutUser = async () => await signOut(auth);
+
+export const onAuthStateChangedListener = (callback) =>
+  onAuthStateChanged(auth, callback);

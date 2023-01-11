@@ -1,35 +1,37 @@
 import { useState } from 'react';
 
-import './sign-up-form.styles.scss';
+import FormInput from '../form-input/form-input.component';
+import Button from '../button/button.component';
+
 import {
   createAuthUserWithEmailAndPassword,
   createUserDocumentFromAuth,
 } from '../../utils/firebase/firebase.utils';
 
-import FormInput from '../form-input/form-input.component';
-import Button from '../button/button.component';
+import './sign-up-form.styles.scss';
+
+const defaultFormFields = {
+  displayName: '',
+  email: '',
+  password: '',
+  confirmPassword: '',
+};
 
 const SignUpForm = () => {
-  const [inputFields, setInputFields] = useState({
-    displayName: '',
-    email: '',
-    password: '',
-    confirmPassword: '',
-  });
-  const { displayName, email, password, confirmPassword } = inputFields;
+  const [formFields, setFormFields] = useState(defaultFormFields);
+  const { displayName, email, password, confirmPassword } = formFields;
 
-  const onChangeHandler = (e) => {
-    const { name, value } = e.target;
-
-    setInputFields((lastInputFields) => ({
-      ...lastInputFields,
-      [name]: value,
-    }));
+  const resetFormFields = () => {
+    setFormFields(defaultFormFields);
   };
 
-  const onSubmitHandler = async (e) => {
-    e.preventDefault();
-    if (password !== confirmPassword) return;
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+
+    if (password !== confirmPassword) {
+      alert('passwords do not match');
+      return;
+    }
 
     try {
       const { user } = await createAuthUserWithEmailAndPassword(
@@ -38,66 +40,63 @@ const SignUpForm = () => {
       );
 
       await createUserDocumentFromAuth(user, { displayName });
-    } catch (err) {
-      console.log(err);
+      resetFormFields();
+    } catch (error) {
+      if (error.code === 'auth/email-already-in-use') {
+        alert('Cannot create user, email already in use');
+      } else {
+        console.log('user creation encountered an error', error);
+      }
     }
+  };
 
-    setInputFields({
-      displayName: '',
-      email: '',
-      password: '',
-      confirmPassword: '',
-    });
+  const handleChange = (event) => {
+    const { name, value } = event.target;
+
+    setFormFields({ ...formFields, [name]: value });
   };
 
   return (
-    <div className="sign-up-container">
-      <h2>Don't have an account ?</h2>
-
-      <form onSubmit={onSubmitHandler}>
+    <div className='sign-up-container'>
+      <h2>Don't have an account?</h2>
+      <span>Sign up with your email and password</span>
+      <form onSubmit={handleSubmit}>
         <FormInput
-          label="Display Name"
-          type="text"
-          id="displayName"
-          name="displayName"
+          label='Display Name'
+          type='text'
+          required
+          onChange={handleChange}
+          name='displayName'
           value={displayName}
-          required
-          onChange={onChangeHandler}
         />
 
         <FormInput
-          label="Email"
-          type="email"
-          id="email"
-          name="email"
+          label='Email'
+          type='email'
+          required
+          onChange={handleChange}
+          name='email'
           value={email}
-          required
-          onChange={onChangeHandler}
         />
 
         <FormInput
-          label="Password"
-          type="text"
-          id="password"
-          name="password"
+          label='Password'
+          type='password'
+          required
+          onChange={handleChange}
+          name='password'
           value={password}
-          required
-          onChange={onChangeHandler}
         />
 
         <FormInput
-          label="Confirm Password"
-          type="text"
-          id="confirmPassword"
-          name="confirmPassword"
-          value={confirmPassword}
+          label='Confirm Password'
+          type='password'
           required
-          onChange={onChangeHandler}
+          onChange={handleChange}
+          name='confirmPassword'
+          value={confirmPassword}
         />
-
-        <Button type="submit" buttonType={'google'}>
-          Sign Up
-        </Button>
+        <Button type='submit'>Sign Up</Button>
       </form>
     </div>
   );

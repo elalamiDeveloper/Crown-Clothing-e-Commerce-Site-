@@ -1,4 +1,6 @@
-import CategoriesList from '../../components/categories-list/categories.component-list';
+import { Outlet } from 'react-router-dom';
+
+import Directory from '../../components/directory/directory.component';
 
 const Home = () => {
   const categories = [
@@ -30,8 +32,9 @@ const Home = () => {
   ];
 
   return (
-    <div className="padding-page">
-      <CategoriesList categories={categories} />
+    <div>
+      <Directory categories={categories} />
+      <Outlet />
     </div>
   );
 };
